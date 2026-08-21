@@ -1,0 +1,7 @@
+title: Hoot Documentation
+description: A terminal client for Nostr
+theme: minima
+markdown: kramdown
+kramdown:
+  syntax_highlighter_opts:
+    disable: true
