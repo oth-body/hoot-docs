@@ -1,0 +1,15 @@
+{
+  "name": "hoot-docs",
+  "version": "1.0.0",
+  "description": "Hoot documentation site",
+  "type": "module",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "keywords": [],
+  "dependencies": {
+    "markdown-it": "^15.0.1",
+    "markdown-it-anchor": "^9.2.1",
+    "vite": "^8.2.2"
+  }
+}
