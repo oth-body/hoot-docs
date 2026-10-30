@@ -23,11 +23,12 @@ Your posts are stored on relays (servers) that you choose, not by a single compa
 
 ## What Hoot Does
 
-- **Sign in your way**: import an `nsec` (encrypted locally with a password), or sign in with **Amber** on your phone by scanning a QR code, so your key never touches your computer.
+- **Sign in your way**: import an `nsec` (encrypted locally with a password), or sign in with **Amber** on your phone by scanning a QR code, so your key never touches your computer. Hoot remembers the pairing for next time.
 - **Multiple accounts**: save several profiles and switch between them.
-- **Post notes** to all your relays at once.
-- **Read**: the global feed, your encrypted DMs, and the replies and reactions to any note.
-- **Tip in sats** with any Nostr Wallet Connect (NWC) wallet, by Lightning address or npub. Hoot waits for your wallet to confirm the payment.
+- **A real feed**: global or just the people you follow, with names, threads, and **reply / like / zap** on any post.
+- **Private DMs**: read and send NIP-17 gift-wrapped messages (and read older NIP-04 ones), with a local key or with Amber.
+- **Zaps and tips in sats** with any Nostr Wallet Connect (NWC) wallet, by Lightning address, npub or straight from a post. Hoot waits for your wallet to confirm.
+- **Fast**: relays are queried in parallel and the screen never freezes while loading.
 - **Manage relays** from inside the app, even before you sign in.
 
 ## Quick Start
@@ -35,7 +36,8 @@ Your posts are stored on relays (servers) that you choose, not by a single compa
 1. [Install Hoot](getting-started/installation.md)
 2. Sign in: [import a key](getting-started/first-profile.md) or [use Amber](getting-started/amber-login.md)
 3. [Post your first note](posting-notes.md)
-4. [Connect a Lightning wallet](wallet-connect.md) to send tips
+4. [Read the feed, reply and DM](reading.md)
+5. [Connect a Lightning wallet](wallet-connect.md) to zap and tip
 
 ## All Pages
 
@@ -44,6 +46,6 @@ Your posts are stored on relays (servers) that you choose, not by a single compa
 - [Sign In with Amber](getting-started/amber-login.md)
 - [Posting Notes](posting-notes.md)
 - [Feed, DMs and Replies](reading.md)
-- [Tipping with NWC](wallet-connect.md)
+- [Tipping and Zaps](wallet-connect.md)
 - [CLI Reference](cli-reference.md)
 - [Troubleshooting](troubleshooting.md)

@@ -5,7 +5,7 @@ nav_order: 7
 
 # Troubleshooting
 
-Find the message you're seeing below. For tipping messages, see the table in [Tipping with NWC](wallet-connect.md#results-and-errors).
+Find the message you're seeing below. For tipping and zap messages, see the table in [Tipping and Zaps](wallet-connect.md#results-and-errors).
 
 ## Signing In
 
@@ -51,13 +51,21 @@ Other apps only see it if they read from at least one of the relays you posted t
 
 None of your relays answered and nothing is cached yet. Check your internet connection and relay list.
 
-### "No private key available for decrypting DMs"
+### DMs load slowly or Amber keeps asking for approval
 
-You signed in with Amber. Reading DMs from Amber isn't supported yet; sign in with an imported profile to read DMs.
+With Amber, your phone decrypts each message. Hoot limits this to the newest ones, but each still needs Amber to answer. In Amber, you can allow Hoot to encrypt and decrypt without asking each time.
+
+### My DM didn't arrive
+
+Hoot sends private (NIP-17) messages to the recipient's DM inbox relays (kind 10050), or to your relays if they haven't published any. If the recipient uses an app that only reads older NIP-04 DMs, it won't show NIP-17 messages; ask them to update or use a newer app.
 
 ### Replies screen shows nothing
 
-Use the 64-character **hex** event ID; `note1…`/`nevent1…` IDs aren't supported yet.
+Check the ID: Hoot accepts `note1…`, `nevent1…` and 64-character hex IDs. The replies may also only exist on relays you don't use. A `nevent1…` ID carries relay hints, so it can find them.
+
+### "Zap … sent as a plain tip"
+
+The recipient's Lightning address doesn't support Nostr zaps (NIP-57). They still got the sats, but the zap won't show on Nostr.
 
 ## Display
 
