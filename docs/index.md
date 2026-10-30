@@ -5,37 +5,45 @@ nav_order: 1
 
 # Hoot
 
-A terminal client for Nostr — post notes, browse the feed, and send sats without leaving your command line.
+A terminal client for Nostr. Post notes, read the feed and your DMs, and tip people in sats without leaving the command line.
+
+Hoot has two modes:
+
+- **TUI**: run `hoot` with no arguments for a full-screen, menu-driven app.
+- **CLI**: run `hoot` with flags (`hoot -m "gm"`) for scripts and one-off commands.
 
 ## What is Nostr?
 
-Nostr is a simple, open protocol for decentralized social networking. Your identity is a cryptographic key pair:
+Nostr is an open protocol for decentralized social networking. Your identity is a key pair:
 
-- **Private key** (nsec) — keeps your account secure, never shared
-- **Public key** (npub) — your identity others see, starts with `npub1`
+- **Private key** (`nsec1…`): proves you are you. Never share it.
+- **Public key** (`npub1…`): your identity, which others see.
 
-Unlike traditional social media, there's no company owning your data. Your posts live on relay servers you choose.
+Your posts are stored on relays (servers) that you choose, not by a single company.
 
 ## What Hoot Does
 
-- **Create profiles** — generate keys or import existing ones
-- **Post notes** — publish to multiple relays at once
-- **Browse feed** — see what's happening on the network
-- **Direct messages** — encrypted private conversations
-- **Send sats** — tip creators via Lightning Network
-- **Multi-account** — manage several profiles from one install
+- **Sign in your way**: import an `nsec` (encrypted locally with a password), or sign in with **Amber** on your phone by scanning a QR code, so your key never touches your computer.
+- **Multiple accounts**: save several profiles and switch between them.
+- **Post notes** to all your relays at once.
+- **Read**: the global feed, your encrypted DMs, and the replies and reactions to any note.
+- **Tip in sats** with any Nostr Wallet Connect (NWC) wallet, by Lightning address or npub. Hoot waits for your wallet to confirm the payment.
+- **Manage relays** from inside the app, even before you sign in.
 
 ## Quick Start
 
 1. [Install Hoot](getting-started/installation.md)
-2. [Create your first profile](getting-started/first-profile.md)
+2. Sign in: [import a key](getting-started/first-profile.md) or [use Amber](getting-started/amber-login.md)
 3. [Post your first note](posting-notes.md)
-4. [Connect a Lightning wallet](wallet-connect.md)
+4. [Connect a Lightning wallet](wallet-connect.md) to send tips
 
-## Navigation
+## All Pages
 
-- [Getting Started](getting-started/installation.md) — installation and first steps
-- [Your First Profile](getting-started/first-profile.md) — creating a Nostr identity
-- [Posting Notes](posting-notes.md) — compose and publish
-- [NWC Wallet Connect](wallet-connect.md) — set up tipping with Lightning
-- [Troubleshooting](troubleshooting.md) — solutions to common problems
+- [Installation](getting-started/installation.md)
+- [Your First Profile](getting-started/first-profile.md)
+- [Sign In with Amber](getting-started/amber-login.md)
+- [Posting Notes](posting-notes.md)
+- [Feed, DMs and Replies](reading.md)
+- [Tipping with NWC](wallet-connect.md)
+- [CLI Reference](cli-reference.md)
+- [Troubleshooting](troubleshooting.md)
