@@ -1,84 +1,81 @@
 ---
 title: Installation
 parent: Getting Started
-nav_order: 1
+nav_order: 2
 ---
 
 # Installing Hoot
 
-Hoot runs as a single binary on your machine. No dependencies beyond Go.
+Hoot is a single binary with no runtime dependencies.
 
-## Prerequisites
+## Option 1: Download a Release
 
-Before installing, verify you have:
+Prebuilt binaries for Linux, macOS and Windows (amd64 and arm64) are on the [Releases page](https://github.com/oth-body/hoot/releases).
 
-- **Go 1.19 or later** — [install guide](https://go.dev/doc/install)
-- **Git** — [install guide](https://git-scm.com/downloads)
+1. Download the archive for your system, e.g. `hoot_<version>_linux_amd64.tar.gz` or `hoot_<version>_windows_amd64.zip`.
+2. Extract it and put `hoot` (or `hoot.exe`) somewhere on your `PATH`.
+3. Optionally verify the download against `SHA256SUMS.txt`:
+   ```bash
+   sha256sum --check --ignore-missing SHA256SUMS.txt
+   ```
 
-Check your versions:
+> These docs describe the latest code on `master`. If a feature described here is missing from your release (for example tipping from the TUI), build from source as shown below.
+
+## Option 2: Build from Source
+
+You need **Go 1.26 or later** ([install guide](https://go.dev/doc/install)) and Git.
 
 ```bash
-go version    # should output something like: go version go1.21.0
-git --version # should output: git version 2.x.x
+go version   # should print go1.26 or newer
 ```
-
-## Install
-
-### Option 1: Build from Source
 
 ```bash
 git clone https://github.com/oth-body/hoot.git
 cd hoot
-go build -o hoot
+go build -o hoot .
 ```
 
-This creates an executable named `hoot` in the current directory.
-
-### Option 2: Add to Your PATH
-
-After building, move the binary somewhere convenient:
+This creates a `hoot` executable in the current directory. Move it onto your `PATH`:
 
 ```bash
 # Linux/macOS
 sudo mv hoot /usr/local/bin/
 
-# Windows
-# Move hoot.exe to a folder in your PATH, like C:\Users\YourName\bin\
+# Windows: move hoot.exe to a folder on your PATH, e.g. C:\Users\YourName\bin\
 ```
 
 ## Verify It Works
 
-Run without arguments to launch the TUI:
-
 ```bash
-hoot
+hoot -version
 ```
 
-You should see the welcome screen:
+Then run `hoot` with no arguments to launch the TUI. On first run you'll see:
 
 ```
 🦉 Welcome to Hoot!
 
 No profiles yet. Let's create one!
+
 → Create new profile
-→ Scan QR with Amber (NIP-46)
+  Scan QR with Amber (NIP-46)
+  🔗 Configure relays
 ```
 
-## Troubleshooting Build Errors
+Use **↑/↓** (or **j/k**) to move, **Enter** to choose, **Esc** to go back, and **Ctrl+C** to quit from anywhere.
+
+Next: [create your first profile](first-profile.md) or [sign in with Amber](amber-login.md).
+
+## Build Problems
+
+### `go: go.mod requires go >= 1.26.0`
+
+Your Go is too old. [Update Go](https://go.dev/dl/). With Go 1.21 or newer and network access, Go can also fetch the right toolchain automatically (`GOTOOLCHAIN=auto`, the default).
 
 ### `command not found: go`
 
-Go isn't installed or not in your PATH. Download and install from [go.dev](https://go.dev/dl/).
-
-### `package not found`
-
-Run `go mod download` to fetch dependencies:
-
-```bash
-go mod download
-go build -o hoot
-```
+Go isn't installed or isn't on your `PATH`. Install it from [go.dev/dl](https://go.dev/dl/).
 
 ### Windows: "Windows protected your PC"
 
-Click "More info" → "Run anyway" when Windows blocks the unsigned executable.
+The binaries aren't code-signed. Click **More info → Run anyway**.

@@ -1,126 +1,89 @@
 ---
-title: NWC Wallet Connect
-nav_order: 4
+title: Tipping with NWC
+nav_order: 5
 ---
 
-# Connecting a Lightning Wallet
+# Tipping with Nostr Wallet Connect
 
-Send sats (satoshis) to other users via Nostr Wallet Connect (NWC). This lets you tip without revealing your node details.
+Hoot sends tips (sats over the Lightning Network) through your own wallet using **Nostr Wallet Connect** ([NIP-47](https://github.com/nostr-protocol/nips/blob/master/47.md)). You create a connection in your wallet, give its connection string to Hoot once, and Hoot asks the wallet to pay each tip.
 
-## What is NWC?
+## 1. Get a Connection String from Your Wallet
 
-Nost Wallet Connect is a protocol that connects your Lightning wallet to apps like Hoot. Instead of exposing your node IP, you share a connection URI that apps use to request payments on your behalf.
+Any wallet that supports NWC works, for example:
 
-**Important**: You're approving a specific connection; the app can't spend freely.
+- [Alby Hub](https://getalby.com): self-custodial, with the most complete NWC support.
+- [Rizful](https://rizful.com): quick to start, but custodial.
+- Others listed at [nwc.dev](https://nwc.dev).
 
-## Supported Wallets
+In your wallet, create a new **app connection** for Hoot and copy its **connection secret**. Make sure the connection is allowed to **send** payments: some wallets also offer receive-only connections, which can't pay tips.
 
-- [Alby](https://getalby.com) — Browser extension, recommended for most users
-- [Mutiny](https://mutinywallet.com) — Self-custodial wallet
-- [Coracle](https://coracle.social) — Web wallet
-- Any wallet supporting NWC
+The connection string looks like:
 
-## Set Up Alby
-
-1. Install the [Alby browser extension](https://getalby.com)
-2. Create an account or connect your Lightning node
-3. Click the Alby icon → **Connect apps** → **Nostr Wallet Connect**
-4. Copy the connection URI (starts with `nostr+walletconnect://...`)
-
-## Connect to Hoot
-
-### Via TUI
-
-1. Launch Hoot and log in
-2. Select **Tip someone**
-3. Enter the recipient's npub or Lightning address
-4. Enter the amount in sats
-
-But first, you need to connect your wallet:
-
-### Via CLI
-
-1. Save your NWC URI:
-
-```bash
-hoot -nwc "nostr+walletconnect://pubkey?relay=wss://relay.example.com&secret=..."
+```
+nostr+walletconnect://<wallet-pubkey>?relay=wss://relay.example.com&secret=<secret>
 ```
 
-2. Verify it saved:
+> **Treat it like a password.** Anyone with this string can spend from the connection. Most wallets let you set a **spending budget** for a connection; set one.
 
-```bash
-# Check config was created
-cat ~/.config/nostr-cli/nwc.txt
-```
-
-### Save NWC in TUI
-
-Currently, NWC setup requires the CLI. After saving the URI via CLI, the TUI tip feature will use it automatically.
-
-## Sending a Tip
-
-### By Lightning Address
-
-```bash
-hoot -tip 100 -user alice@getalby.com
-```
-
-Hoot will:
-1. Resolve the Lightning address from Alice's Nostr profile
-2. Fetch an invoice for 100 sats
-3. Pay it via your connected wallet
-
-### By npub
-
-```bash
-hoot -tip 50 -user npub1abc123...
-```
-
-Hoot looks up the user's profile, finds their Lightning address, and pays.
-
-### By Hex Public Key
-
-```bash
-hoot -tip 100 -user 3f2a... (hex pubkey)
-```
-
-## Troubleshooting
-
-### "No NWC URI configured"
-
-You haven't saved your NWC connection yet. Run:
+## 2. Give It to Hoot
 
 ```bash
 hoot -nwc "nostr+walletconnect://..."
 ```
 
-### "Could not find lightning address"
+Hoot checks the string before saving it (correct scheme, a hex wallet key and secret, a relay) and stores it in `nwc.txt` in your [config directory](getting-started/first-profile.md#where-hoot-stores-things). Run the command again to replace it.
 
-The user hasn't set a Lightning address in their profile. Ask them to add one (typically `lud16` field).
+## 3. Send a Tip
 
-### "Payment failed"
+### From the TUI
 
-Common causes:
-- Insufficient balance in your wallet
-- Wallet disconnected (check Alby extension is active)
-- Invoice expired (try again)
+1. Choose **[t] Tip someone**.
+2. Enter who to tip: a Lightning address (`alice@getalby.com`), an `npub1…`, or a hex public key. Press **Enter**.
+3. Enter the amount in sats and press **Enter**.
+4. Hoot shows **Waiting for your wallet to pay...**, then the result, e.g. **⚡ Paid 21 sats to alice@getalby.com (fee 3000 msat)**.
 
-### "Connection timeout"
-
-- Check your internet connection
-- Verify the NWC relay URL is accessible
-- Try a different relay
-
-### Verify Wallet Connection
-
-Check if your NWC URI is properly saved:
+### From the CLI
 
 ```bash
-# Linux/macOS
-cat ~/.config/nostr-cli/nwc.txt
-
-# Windows
-type %APPDATA%\nostr-cli\nwc.txt
+hoot -tip 21 -user alice@getalby.com     # Lightning address
+hoot -tip 21 -user npub1...              # npub
+hoot -tip 21 -user <hex-pubkey>          # hex public key
 ```
 
-The file should contain your full `nostr+walletconnect://...` URI.
+The CLI prints each step and, on success, the payment preimage (proof of payment).
+
+## What Hoot Does
+
+1. **Finds the Lightning address.** For an npub or hex key, Hoot reads the `lud16` field from that person's Nostr profile.
+2. **Gets an invoice** from the address's LNURL server, after checking the amount is within the recipient's minimum and maximum.
+3. **Checks the invoice** is for exactly the amount you asked for, and refuses to pay if it isn't.
+4. **Asks your wallet to pay** over NWC, then **waits up to 60 seconds** for the wallet's answer.
+
+## Results and Errors
+
+| You see | Meaning |
+|---|---|
+| **Paid N sats to …** | Done. The wallet confirmed the payment. |
+| **wallet error INSUFFICIENT_BALANCE: …** | The wallet refused; it says why. Other codes include `QUOTA_EXCEEDED` (connection budget used up) and `PAYMENT_FAILED` (no route). |
+| **wallet did not respond in time; the payment may still complete…** | Hoot didn't hear back within 60s. **Check your wallet's history before trying again** so you don't pay twice. |
+| **wallet error RESTRICTED** or **UNAUTHORIZED** | The connection isn't allowed to send payments (e.g. receive-only), or was revoked. Create a new connection that can send, and save it with `hoot -nwc`. |
+| **no wallet connected: run `hoot -nwc …`** | You haven't saved a connection string yet. |
+| **could not find a lightning address for that user** | Their profile has no `lud16`. Ask them for a Lightning address and tip that directly. |
+| **alice@… accepts 1–100000 sats, not 500000** | The amount is outside the recipient's limits. |
+| **LNURL server error: …** | The recipient's Lightning address provider returned an error. |
+| **invoice is for … msat but … msat was requested; refusing to pay** | The recipient's server sent a wrong invoice. Hoot didn't pay it. |
+
+## Check Your Saved Connection
+
+```bash
+# Linux
+cat ~/.config/hoot/nwc.txt
+
+# macOS
+cat ~/Library/Application\ Support/hoot/nwc.txt
+
+# Windows
+type %APPDATA%\hoot\nwc.txt
+```
+
+Avoid pasting the output anywhere: it contains your connection secret.

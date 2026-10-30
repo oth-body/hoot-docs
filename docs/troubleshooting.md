@@ -1,175 +1,101 @@
 ---
 title: Troubleshooting
-nav_order: 5
+nav_order: 7
 ---
 
 # Troubleshooting
 
-Common issues and solutions.
+Find the message you're seeing below. For tipping messages, see the table in [Tipping with NWC](wallet-connect.md#results-and-errors).
 
-## App Won't Start
+## Signing In
 
-### "TUI error" on launch
+### "Login failed: password verification failed"
 
-```
-TUI error: error connecting to relay
-```
+The password doesn't match this profile. Passwords can't be recovered. If you still have your nsec, delete the profile's entry by removing `profiles.json` from your [config directory](getting-started/first-profile.md#where-hoot-stores-things) (this removes **all** saved profiles), then add it again.
 
-**Cause**: No network access or all configured relays are unreachable.
+### "Please enter a valid nsec"
 
-**Fix**: Check your internet connection, then try different relays:
+The key must be in `nsec1…` format. If your app only shows a hex private key, convert it to `nsec` first (most Nostr apps can export either).
 
-```
-wss://relay.damus.io
-wss://nos.lol
-wss://purplepag.es
-```
+### Amber / QR sign-in problems
 
-### Blank screen or rendering issues
+See [Sign In with Amber → Troubleshooting](getting-started/amber-login.md#troubleshooting), including the "refusing to dial relays through HTTPS_PROXY" message.
 
-**Cause**: Terminal doesn't support the character rendering.
+### The CLI says "Failed to load private key"
 
-**Fix**: Try a different terminal (Windows Terminal, iTerm2, Alacritty) or resize the window.
-
-## Key and Profile Issues
-
-### "Password verification failed"
-
-**Cause**: Wrong password entered for your profile.
-
-**Fix**: 
-- Use the password you created when adding the profile
-- Cannot be recovered — you'll need to delete the profile and re-add it
-
-Delete your profile:
-```bash
-# Manually remove the config directory (Linux/macOS)
-rm -rf ~/.config/nostr-cli/
-
-# Or on Windows
-rd /s %APPDATA%\nostr-cli
-```
-
-### "Invalid nsec"
-
-**Cause**: Private key format is wrong.
-
-**Fix**: Ensure the key starts with `nsec1` (bech32 format). Hex-format keys (`abcd123...`) won't work with Hoot.
-
-### Lost my password
-
-**Cause**: Passwords cannot be recovered.
-
-**Fix**: If you have your original nsec, delete the profile and re-add with a new password:
+The CLI has no key it can use: no key saved with `hoot -s`, and no TUI profile. Add a profile in the TUI, or run:
 
 ```bash
-rm -rf ~/.config/nostr-cli/
-hoot  # Create new profile with same nsec
+hoot -s -k nsec1...
 ```
 
-## Posting Issues
+With several TUI profiles, the CLI uses the one you last signed in to. Sign in to the right one in the TUI first.
 
-### "Failed to publish to any relay"
+## Posting
 
-**Cause**: All relays rejected your event (rate limiting, validation failure).
+### "failed to publish to any relay"
 
-**Fix**:
-- Wait and retry — some relays rate limit
-- Remove unreliable relays from your list
-- Check your key is valid
+No relay accepted the note.
 
-### Post appears nowhere
+- Check your internet connection.
+- Some relays rate-limit, need payment, or are down. Add a couple of free relays such as `wss://nos.lol` with **[r] Manage Relays**.
+- With Amber: check whether Amber is waiting for you to approve the signature.
 
-**Cause**: Relays may be slow to propagate, or you're looking at the wrong relay's view.
+### My post doesn't show up in other apps
 
-**Fix**: 
-- Posts take a few seconds to appear
-- Query a specific relay directly to verify publication
-- Try `hoot -l` to see your recent posts
+Other apps only see it if they read from at least one of the relays you posted to. Add a widely used relay (e.g. `wss://relay.damus.io` or `wss://nos.lol`) to your list.
 
-## NWC / Tipping Issues
+## Reading
 
-### "No NWC URI configured"
+### The feed is empty
 
-**Cause**: Wallet connection not saved.
+None of your relays answered and nothing is cached yet. Check your internet connection and relay list.
 
-**Fix**: Save your NWC URI:
+### "No private key available for decrypting DMs"
 
-```bash
-hoot -nwc "nostr+walletconnect://your-uri-here"
-```
+You signed in with Amber. Reading DMs from Amber isn't supported yet; sign in with an imported profile to read DMs.
 
-### "Payment request timeout"
+### Replies screen shows nothing
 
-**Cause**: Wallet didn't respond in time.
+Use the 64-character **hex** event ID; `note1…`/`nevent1…` IDs aren't supported yet.
 
-**Fix**:
-- Ensure your wallet (Alby, etc.) is connected and unlocked
-- Try again — payments can timeout under load
+## Display
 
-### "Insufficient balance"
+### The QR code is cut off or garbled
 
-**Cause**: Your Lightning wallet doesn't have enough sats.
+Make the terminal bigger (it redraws on resize) and use a terminal with good Unicode support, such as Windows Terminal, iTerm2, kitty, Alacritty or GNOME Terminal.
 
-**Fix**: Add funds to your wallet and retry.
+### Colors or boxes look wrong
 
-### Zap doesn't work after NWC setup
+Use a modern terminal emulator; the legacy Windows console (`conhost`) renders poorly.
 
-**Causes to check in order**:
+## Building
 
-1. **NWC URI saved correctly?**
-   ```bash
-   cat ~/.config/nostr-cli/nwc.txt
-   ```
-   Should output a `nostr+walletconnect://...` URI.
+### `go: go.mod requires go >= 1.26.0`
 
-2. **Wallet connected and unlocked?**
-   Open Alby/Mutiny and verify connection status.
-
-3. **Recipient has Lightning address?**
-   Ask them to add one to their profile metadata.
-
-4. **Invoice expired?**
-   Retry — invoices expire quickly.
-
-5. **Relay connectivity?**
-   NWC communicates via relay; ensure your relay is working.
-
-## Build Errors
+Hoot needs Go 1.26 or newer. [Update Go](https://go.dev/dl/), or download a [prebuilt release](https://github.com/oth-body/hoot/releases).
 
 ### "go: cannot find main module"
 
-**Cause**: Running `go build` outside the project directory.
+Run `go build -o hoot .` from inside the `hoot` folder.
 
-**Fix**:
-```bash
-cd hoot
-go build -o hoot
-```
+## Resetting Everything
 
-### "package not found" for dependencies
-
-**Cause**: Dependencies not downloaded.
-
-**Fix**:
-```bash
-go mod download
-go build -o hoot
-```
-
-### Go version too old
-
-**Cause**: Project requires Go 1.19+.
-
-**Fix**: [Update Go](https://go.dev/doc/install):
+To start over, delete the config directory. This removes all profiles, your wallet connection, relays and cache:
 
 ```bash
-go version  # Check current version
+# Linux
+rm -rf ~/.config/hoot
+
+# macOS
+rm -rf ~/Library/Application\ Support/hoot
+
+# Windows (Command Prompt)
+rd /s /q %APPDATA%\hoot
 ```
+
+Make sure you have your nsec saved somewhere else first.
 
 ## Getting Help
 
-If these don't solve your issue:
-
-1. Check [existing GitHub issues](https://github.com/oth-body/hoot/issues)
-2. Ask in the [Nostr community](https://nostr.how) — use `npub1hoot...` to find Hoot developers
+Search or open an issue at [github.com/oth-body/hoot/issues](https://github.com/oth-body/hoot/issues). Include your `hoot -version` output and the exact error message.

@@ -5,36 +5,32 @@ nav_order: 3
 
 # Posting Notes
 
-Send notes to the Nostr network. Your message publishes to all configured relays.
+Hoot publishes your note to every relay in your list. The post succeeds if at least one relay accepts it.
 
-## Using the TUI
+## From the TUI
 
-1. Launch Hoot and log in to your profile:
-   ```bash
-   hoot
-   ```
+1. Run `hoot` and sign in.
+2. Choose **[p] Post a message**.
+3. Type your note and press **Enter**.
+4. You'll see **Posted successfully!** once a relay accepts it.
 
-2. From the home menu, select **Post a message**
-
-3. Type your note and press Enter
-
-4. You'll see "Posted successfully!" when published
-
-Hashtags like `#hello` are automatically extracted and tagged.
-
-## Using the CLI
-
-Post directly without the TUI:
+## From the CLI
 
 ```bash
 hoot -m "Hello Nostr! #introduction"
 ```
 
-The message publishes immediately and exits.
+Hoot prints which relays accepted the note, then exits. With the CLI, `#hashtags` are also added as `t` tags so they show up in hashtag searches. Notes posted from the TUI don't get these tags yet.
+
+Send a note to specific relays only (instead of your saved list):
+
+```bash
+hoot -r "wss://relay1.example.com,wss://relay2.example.com" -m "Just these relays"
+```
 
 ## Relays
 
-By default, Hoot uses three public relays:
+If you haven't set up your own list, Hoot uses:
 
 ```
 wss://relay.damus.io
@@ -42,45 +38,41 @@ wss://relay.nostr.band
 wss://nostr.wine
 ```
 
-### Add Your Own
+### Manage Relays in the TUI
 
-From the TUI:
-1. Select **Manage Relays** from home menu
-2. Press `a` to add a relay
-3. Enter the WebSocket URL (e.g., `wss://my-relay.example.com`)
-4. Press Enter to save
+Open **[r] Manage Relays** from the home screen, or **🔗 Configure relays** from the login screen before you sign in.
 
-The relay list is saved to `relays.txt` in your config directory.
+- **a**: add a relay (must start with `wss://` or `ws://`)
+- **d**: delete the selected relay
+- **↑/↓**: move between relays
+- **Esc**: go back
 
-### Relay Configuration File
+Changes are saved immediately.
 
-Create `relays.txt` in your config directory:
+### The relays.txt File
+
+The list is stored in `relays.txt` in your [config directory](getting-started/first-profile.md#where-hoot-stores-things), one URL per line. Lines starting with `//` are ignored:
 
 ```
 wss://relay.damus.io
-wss://relay.nostr.band
-wss://nostr.wine
-wss://my-custom-relay.com
+wss://nos.lol
+// wss://relay.i-dont-use-anymore.com
 ```
 
-Lines starting with `//` are ignored as comments.
+> If there's a `relays.txt` in the **current directory** when you run Hoot, that file is used instead of the one in your config directory.
 
-## Troubleshooting Failed Posts
+## If Posting Fails
 
-If posting fails:
+**"failed to publish to any relay"** means no relay accepted the note:
 
-1. **No relay connection** — Check your internet and relay URLs
-2. **Relay timeout** — Some relays are slow; Hoot publishes to all configured relays and succeeds if any accept
-3. **Invalid key** — Your private key may be corrupted; try logging in again
+- Check your internet connection.
+- Some relays rate-limit or require payment; add a couple of free public relays such as `wss://nos.lol`.
+- If you signed in with Amber, check whether Amber is waiting for you to approve the signature.
 
-## Viewing Your Posts
+## See Your Posts
 
-From the TUI:
-- Select **View feed** to see recent posts
-
-From CLI:
 ```bash
-hoot -l
+hoot -l    # your last 4 notes
 ```
 
-This shows your last 4 posts.
+In the TUI, **[f] View feed** shows the newest notes from everyone on your relays. See [Feed, DMs and Replies](reading.md).

@@ -1,79 +1,68 @@
 ---
 title: Your First Profile
 parent: Getting Started
-nav_order: 2
+nav_order: 3
 ---
 
-# Your First Nostr Profile
+# Your First Profile
 
-A Nostr profile is a key pair. Your private key proves you own the public key everyone sees.
+A Hoot profile is a Nostr private key (`nsec`) that Hoot stores on your computer, encrypted with a password you choose.
 
-## How It Works
+Don't want your key on this computer at all? [Sign in with Amber](amber-login.md) instead.
 
-When you create a profile in Hoot:
+## You Need an nsec
 
-1. You provide an **nsec** (private key in bech32 format, starts with `nsec1`)
-2. Hoot encrypts it with your password and stores it locally
-3. Your **npub** (public key) is derived automatically
+Hoot imports existing keys; it doesn't generate new ones. If you don't have a Nostr account yet, create one in any Nostr app (for example Amber, Primal or Damus) and export the `nsec1…` private key from its settings.
 
-Your private key never leaves your machine unless you explicitly share it.
+> **Keep your nsec secret.** Anyone who has it controls your account, and it can't be changed or revoked.
 
-## Create a New Key Pair
+## Add a Profile in the TUI
 
-If you don't have a Nostr key yet, generate one:
+1. Run `hoot`.
+2. Choose **Create new profile**. If you already have profiles, choose **+ Add new profile**.
+3. Enter a name for the profile (e.g. `main`). This is only a local label.
+4. Paste your `nsec1…` key.
+5. Choose a password. It encrypts the key on disk, and you'll type it each time you unlock this profile.
+6. You're signed in and on the home screen.
 
-```bash
-# Generate a random key pair (using nostr CLI tools)
-# Or use an online generator like https://nostr.band to get an nsec
-```
+> **There is no password recovery.** If you forget the password, delete the profile and add it again with your nsec.
 
-> **Security note**: Generating keys online means trusting that site. For production use, generate keys locally or use a hardware wallet.
+Press **Esc** at any step to go back to the menu without saving.
 
-## Add Profile in Hoot TUI
+## Signing In Later
 
-1. Launch Hoot:
-   ```bash
-   hoot
-   ```
-
-2. Select **Create new profile**
-
-3. Enter a name for this profile (e.g., "main" or your handle)
-
-4. Enter your **nsec1...** private key
-
-5. Create a **password** to encrypt this key locally
-   - This password decrypts your key each session
-   - It's stored only on your machine
-   - If forgotten, you cannot recover the key
-
-6. You're logged in and ready to post
+Run `hoot`, pick your profile from the list (the last one you used is marked ★), and enter its password.
 
 ## Multiple Profiles
 
-Hoot supports multiple profiles. After creating your first:
+- Add more accounts with **+ Add new profile**.
+- Switch accounts from the home screen with **[s] Switch Profile**. This fully signs out the current account, including any Amber session, before you pick another.
 
-- Select **+ Add new profile** to add another account
-- Use **Switch Profile** from the home menu to change accounts
-- Each profile has its own encrypted key file
+## Using Your Profile from the CLI
 
-## What Gets Created
+CLI commands such as `hoot -m "gm"` use the profile you last signed in to in the TUI (or your only profile). If you also have a key stored with `hoot -s` (see below), the CLI uses that one instead. Your password is read from `HOOT_PASSWORD` if set, or prompted for. See the [CLI Reference](../cli-reference.md).
 
-Hoot stores your data in:
+## Where Hoot Stores Things
 
-| OS | Location |
+| OS | Config directory |
 |---|---|
-| Linux | `~/.config/nostr-cli/` |
-| macOS | `~/Library/Application Support/nostr-cli/` |
-| Windows | `%APPDATA%\nostr-cli\` |
+| Linux | `$XDG_CONFIG_HOME/hoot/`, usually `~/.config/hoot/` |
+| macOS | `~/Library/Application Support/hoot/` |
+| Windows | `%APPDATA%\hoot\` |
 
-Files created:
-- `profiles.json` — encrypted profile metadata
-- `nwc.txt` — NWC wallet connection (if configured)
-- `relays.txt` — your relay list (optional)
+| File | Contents |
+|---|---|
+| `profiles.json` | Your profiles. Private keys are encrypted (scrypt + NaCl secretbox); public keys and names are not. |
+| `nostr_key.enc` | Key stored by `hoot -s` (older CLI-only setup, see below) |
+| `relays.txt` | Your relay list, if you've customised it |
+| `nwc.txt` | Your wallet connection, if you've set one up. It contains a secret that can spend from that connection, so keep it private. |
+| `hoot_cache.db` | Local cache of recent posts and profiles (safe to delete) |
+
+### Keys Stored with `hoot -s`
+
+Older setups stored a single key with `hoot -s -k <nsec>`. The first time you open the TUI with no profiles, that key is imported as a profile named **Default**, using the same password.
 
 ## Next Steps
 
-Once you have a profile:
-- [Post your first note](posting-notes.md)
-- [Set up Lightning tipping](wallet-connect.md)
+- [Post your first note](../posting-notes.md)
+- [Set up tipping](../wallet-connect.md)
