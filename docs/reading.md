@@ -7,7 +7,7 @@ nav_order: 4
 
 ## Feed
 
-**[f] View feed** shows the 20 newest notes from everyone on your relays, newest first. This is a global feed, not just people you follow. Scroll with **↑/↓** (or **j/k**).
+**[f] View feed** (press `f` on the home screen) shows the 20 newest notes from everyone on your relays, newest first. This is a global feed, not just people you follow. Scroll with **↑/↓** (or **j/k**).
 
 If none of your relays can be reached, Hoot shows the most recent posts it cached locally instead.
 

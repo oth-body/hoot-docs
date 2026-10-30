@@ -39,9 +39,8 @@ It asks for that key's password, or reads it from `HOOT_PASSWORD`. If there's no
 
 | Flag | Description |
 |------|-------------|
+| `-npub` | Print your npub. TUI profiles don't need a password for this. |
 | `-s -k <nsec>` | Store a private key on this computer, encrypted with a password |
-
-To print your npub, run any command that loads your key without doing anything else, e.g. `hoot -r ""`.
 
 ### Tipping
 
@@ -101,6 +100,14 @@ hoot -tip 21 -user npub1...
 ```bash
 hoot -nwc "nostr+walletconnect://<wallet-pubkey>?relay=wss://...&secret=<secret>"
 ```
+
+### Get your npub in a script
+
+```bash
+NPUB=$(hoot -npub)
+```
+
+Password prompts and progress messages go to stderr, so only the npub is captured.
 
 ### Scripted posting
 

@@ -62,7 +62,7 @@ No profiles yet. Let's create one!
   🔗 Configure relays
 ```
 
-Use **↑/↓** (or **j/k**) to move, **Enter** to choose, **Esc** to go back, and **Ctrl+C** to quit from anywhere.
+Use **↑/↓** (or **j/k**) to move, **Enter** to choose, **Esc** to go back, and **Ctrl+C** to quit from anywhere. On the home screen, each item's letter is a shortcut: `p` post, `f` feed, `d` DMs, `e` replies, `t` tip, `r` relays, `s` switch profile, `q` quit.
 
 Next: [create your first profile](first-profile.md) or [sign in with Amber](amber-login.md).
 

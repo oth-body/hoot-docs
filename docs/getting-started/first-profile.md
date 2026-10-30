@@ -23,7 +23,7 @@ Hoot imports existing keys; it doesn't generate new ones. If you don't have a No
 3. Enter a name for the profile (e.g. `main`). This is only a local label.
 4. Paste your `nsec1…` key.
 5. Choose a password. It encrypts the key on disk, and you'll type it each time you unlock this profile.
-6. You're signed in and on the home screen.
+6. You're signed in and on the home screen, which shows your full npub so you can copy and share it.
 
 > **There is no password recovery.** If you forget the password, delete the profile and add it again with your nsec.
 
@@ -37,6 +37,14 @@ Run `hoot`, pick your profile from the list (the last one you used is marked ★
 
 - Add more accounts with **+ Add new profile**.
 - Switch accounts from the home screen with **[s] Switch Profile**. This fully signs out the current account, including any Amber session, before you pick another.
+
+## Your npub
+
+Your public key is shown on the home screen. From the command line:
+
+```bash
+hoot -npub
+```
 
 ## Using Your Profile from the CLI
 

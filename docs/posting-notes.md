@@ -10,7 +10,7 @@ Hoot publishes your note to every relay in your list. The post succeeds if at le
 ## From the TUI
 
 1. Run `hoot` and sign in.
-2. Choose **[p] Post a message**.
+2. Choose **[p] Post a message** (or press `p`).
 3. Type your note and press **Enter**.
 4. You'll see **Posted successfully!** once a relay accepts it.
 
