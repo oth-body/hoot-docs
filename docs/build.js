@@ -1,4 +1,4 @@
-import { writeFile, mkdir, rm } from 'fs/promises'
+import { writeFile, mkdir, rm, cp } from 'fs/promises'
 import { join } from 'path'
 import { fileURLToPath } from 'url'
 import { collectDocs, loadPages, renderPage } from './vite.config.js'
@@ -8,6 +8,8 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 async function build() {
   const outDir = join(__dirname, 'dist')
   await rm(outDir, { recursive: true, force: true })
+  await mkdir(outDir, { recursive: true })
+  await cp(join(__dirname, 'assets'), join(outDir, 'assets'), { recursive: true })
   const pages = await loadPages(await collectDocs(__dirname))
   const urls = new Set(pages.map(p => p.url))
   const broken = []
@@ -18,7 +20,7 @@ async function build() {
     const html = renderPage(page, pages)
     // Fail the build on internal links to pages that don't exist.
     for (const [, href] of html.matchAll(/href="(\/[^"#?]*)/g)) {
-      if (!urls.has(href)) broken.push(`${page.rel}.md -> ${href}`)
+      if (!urls.has(href) && !href.startsWith('/assets/')) broken.push(`${page.rel}.md -> ${href}`)
     }
     for (const [, href] of html.matchAll(/href="([^"#:?]+\.md)(?:#[^"]*)?"/g)) {
       broken.push(`${page.rel}.md -> ${href} (outside docs/)`)

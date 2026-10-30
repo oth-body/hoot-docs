@@ -77,74 +77,118 @@ async function loadPages(files) {
   return pages
 }
 
-// buildNav lists top-level pages by nav_order, with child pages (front matter
-// `parent: <title>`) listed right after their parent, also by nav_order.
-// A parent title with no page of its own is placed by its first child.
-function buildNav(pages, currentRel) {
+// navTree orders pages for the sidebar: top-level pages by nav_order, with
+// child pages (front matter `parent: <title>`) grouped under their parent.
+// A parent title with no page of its own ("Getting Started") becomes a group
+// heading placed by its first child.
+function navTree(pages) {
   const byOrder = (a, b) => a.navOrder - b.navOrder || a.title.localeCompare(b.title)
   const children = new Map()
   for (const p of pages.filter(p => p.parent)) {
     if (!children.has(p.parent)) children.set(p.parent, [])
     children.get(p.parent).push(p)
   }
-  const items = []
-  const tops = pages.filter(p => !p.parent).sort(byOrder)
-  // Orphan parents ("Getting Started" has no page) slot in before the first
-  // top-level page whose nav_order is higher than the group's best child.
+  const tops = pages.filter(p => !p.parent)
   for (const [parent, kids] of children) {
     if (!tops.some(t => t.title === parent)) {
       const order = Math.min(...kids.map(k => k.navOrder))
-      tops.push({ title: parent, navOrder: order + 0.5, group: true })
+      tops.push({ title: parent, navOrder: order - 0.5, group: true })
     }
   }
   tops.sort(byOrder)
-  const link = p => {
-    const cls = p.rel === currentRel ? ' aria-current="page"' : ''
-    return `<li><a href="${p.url}"${cls}>${p.title}</a></li>`
+  return tops.map(t => ({ ...t, kids: (children.get(t.title) || []).sort(byOrder) }))
+}
+
+// readingOrder flattens the sidebar into the sequence used for prev/next links.
+function readingOrder(pages) {
+  const out = []
+  for (const t of navTree(pages)) {
+    if (!t.group) out.push(t)
+    out.push(...t.kids)
   }
-  for (const t of tops) {
-    if (!t.group) { items.push(link(t)) }
-    for (const k of (children.get(t.title) || []).sort(byOrder)) {
-      items.push(link(k))
+  return out
+}
+
+function buildNav(pages, currentRel) {
+  const link = p => {
+    const cur = p.rel === currentRel ? ' aria-current="page"' : ''
+    return `<li><a href="${p.url}"${cur}>${escapeHtml(p.title)}</a></li>`
+  }
+  const items = []
+  for (const t of navTree(pages)) {
+    if (t.kids.length) {
+      const head = t.group ? `<span class="nav-group">${escapeHtml(t.title)}</span>` : `<a href="${t.url}">${escapeHtml(t.title)}</a>`
+      items.push(`<li>${head}<ul>${t.kids.map(link).join('')}</ul></li>`)
+    } else {
+      items.push(link(t))
     }
   }
-  return items.join('\n  ')
+  return items.join('\n      ')
 }
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
 }
 
-function pageHtml(page, content, nav) {
-  const title = page.rel === 'index' ? 'Hoot' : `${page.title} · Hoot`
+const REPO = 'https://github.com/oth-body/hoot-docs'
+
+function pagerHtml(page, pages) {
+  const order = readingOrder(pages)
+  const i = order.findIndex(p => p.rel === page.rel)
+  const prev = order[i - 1], next = order[i + 1]
+  const a = (p, label, cls) => p
+    ? `<a class="${cls}" href="${p.url}" rel="${cls}"><span>${label}</span>${escapeHtml(p.title)}</a>`
+    : '<span></span>'
+  return `<nav class="pager" aria-label="Previous and next page">${a(prev, 'Previous', 'prev')}${a(next, 'Next', 'next')}</nav>`
+}
+
+function pageHtml(page, content, nav, pager) {
+  const title = page.rel === 'index' ? 'Hoot: a terminal client for Nostr' : `${page.title} | Hoot docs`
+  const source = `${REPO}/blob/master/docs/${page.rel}.md`
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Hoot is a terminal client for Nostr: post notes, read the feed and DMs, and zap in sats from the command line.">
   <title>${escapeHtml(title)}</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
-  <style>
-    body { max-width: 800px; margin: 0 auto; padding: 2rem; }
-    .markdown-body { box-sizing: border-box; min-width: 200px; max-width: 100%; }
-    nav ul { display: flex; gap: 1rem; list-style: none; padding: 0; flex-wrap: wrap; }
-    nav a { color: #0969da; text-decoration: none; }
-    nav a:hover, nav a[aria-current] { text-decoration: underline; }
-  </style>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="/assets/site.css">
 </head>
-<body>
-  <nav class="markdown-body"><ul>${nav}</ul></nav>
-  <article class="markdown-body">${content}</article>
+<body class="${page.rel === 'index' ? 'home' : 'doc'}">
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="shell">
+    <aside class="side">
+      <a class="mark" href="/" aria-label="Hoot docs home">hoot<span class="cursor" aria-hidden="true"></span></a>
+      <details class="menu" open>
+        <summary>Menu</summary>
+        <nav aria-label="Documentation"><ul>
+      ${nav}
+        </ul></nav>
+      </details>
+      <p class="side-links"><a href="https://github.com/oth-body/hoot">Source on GitHub</a><br><a href="https://github.com/oth-body/hoot/releases">Releases</a></p>
+    </aside>
+    <main id="content">
+      <article class="prose">${content}</article>
+      ${pager}
+      <p class="edit"><a href="${source}">Edit this page on GitHub</a></p>
+    </main>
+  </div>
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>`
 }
 
 function renderPage(page, pages) {
   const content = rewriteLinks(md.render(page.body), page.rel)
-  return pageHtml(page, content, buildNav(pages, page.rel))
+  return pageHtml(page, content, buildNav(pages, page.rel), pagerHtml(page, pages))
 }
 
-export { collectDocs, loadPages, renderPage, parseFrontMatter, rewriteLinks, buildNav, urlFor, md }
+export { collectDocs, loadPages, renderPage, parseFrontMatter, rewriteLinks, buildNav, navTree, readingOrder, urlFor, md }
 
 export default {
   root: __dirname,
