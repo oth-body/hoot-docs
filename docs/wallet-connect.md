@@ -1,9 +1,9 @@
 ---
-title: Tipping with NWC
+title: Tipping and Zaps
 nav_order: 5
 ---
 
-# Tipping with Nostr Wallet Connect
+# Tipping and Zaps with Nostr Wallet Connect
 
 Hoot sends tips (sats over the Lightning Network) through your own wallet using **Nostr Wallet Connect** ([NIP-47](https://github.com/nostr-protocol/nips/blob/master/47.md)). You create a connection in your wallet, give its connection string to Hoot once, and Hoot asks the wallet to pay each tip.
 
@@ -52,12 +52,18 @@ hoot -tip 21 -user <hex-pubkey>          # hex public key
 
 The CLI prints each step and, on success, the payment preimage (proof of payment).
 
+### Zap a Post
+
+In the feed or a thread, select a post and press **`z`**, then enter an amount. If the author's Lightning address supports Nostr zaps (NIP-57), Hoot attaches a signed zap request, so **the zap shows up on Nostr** against that post, like zaps from other apps. If it doesn't support zaps, the sats are sent as a plain tip and Hoot tells you so.
+
 ## What Hoot Does
 
 1. **Finds the Lightning address.** For an npub or hex key, Hoot reads the `lud16` field from that person's Nostr profile.
 2. **Gets an invoice** from the address's LNURL server, after checking the amount is within the recipient's minimum and maximum.
 3. **Checks the invoice** is for exactly the amount you asked for, and refuses to pay if it isn't.
 4. **Asks your wallet to pay** over NWC, then **waits up to 60 seconds** for the wallet's answer.
+
+Wallet requests are encrypted with NIP-44 when your wallet advertises support for it, and NIP-04 otherwise.
 
 ## Results and Errors
 

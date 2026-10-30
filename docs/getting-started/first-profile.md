@@ -37,6 +37,7 @@ Run `hoot`, pick your profile from the list (the last one you used is marked ★
 
 - Add more accounts with **+ Add new profile**.
 - Switch accounts from the home screen with **[s] Switch Profile**. This fully signs out the current account, including any Amber session, before you pick another.
+- Delete a profile: on the login screen, highlight it and press **`x`**, then **`y`** to confirm. Its encrypted key is removed from this computer; you'll need the nsec to add it again.
 
 ## Your npub
 
@@ -64,6 +65,7 @@ CLI commands such as `hoot -m "gm"` use the profile you last signed in to in the
 | `nostr_key.enc` | Key stored by `hoot -s` (older CLI-only setup, see below) |
 | `relays.txt` | Your relay list, if you've customised it |
 | `nwc.txt` | Your wallet connection, if you've set one up. It contains a secret that can spend from that connection, so keep it private. |
+| `amber_session.json` | Your saved Amber pairing, if any (see [Sign In with Amber](amber-login.md#continue-without-scanning-next-time)). Keep it private. |
 | `hoot_cache.db` | Local cache of recent posts and profiles (safe to delete) |
 
 ### Keys Stored with `hoot -s`

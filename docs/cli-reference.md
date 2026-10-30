@@ -23,17 +23,19 @@ It asks for that key's password, or reads it from `HOOT_PASSWORD`. If there's no
 | Flag | Description |
 |------|-------------|
 | `-m "text"` | Post a note. `#hashtags` become `t` tags. |
-| `-r "url1,url2"` | Relays to use for `-m` and `-u` instead of your saved list |
+| `-r "url1,url2"` | Relays to use for `-m`, `-u` and `-set` instead of your saved list |
 | `-l` | Show your last 4 notes |
 | `-p` | Show your profile (kind 0) as JSON |
-| `-u '<json>'` | Publish a new profile (kind 0). **Replaces your whole profile**, see below. |
+| `-set key=value` | Change one profile field and keep the rest (repeatable; an empty value removes the field) |
+| `-u '<json>'` | Publish a whole new profile (kind 0). **Replaces your entire profile**; prefer `-set`. |
 
 ### Reading
 
 | Flag | Description |
 |------|-------------|
-| `-dms` | Show your DMs, sent and received |
-| `-replies <event-id>` | Show replies and reactions to a note (64-char hex event ID) |
+| `-dms` | Show your DMs (private NIP-17 🔒 and legacy NIP-04), sent and received |
+| `-dm <npub> -m "text"` | Send a private DM (NIP-17) |
+| `-replies <id>` | Show replies and reactions to a note (`note1…`, `nevent1…` or hex) |
 
 ### Keys
 
@@ -81,11 +83,25 @@ hoot -r "wss://relay1.example.com,wss://relay2.example.com" -m "Using specific r
 
 ### Update your profile
 
-`-u` publishes exactly the JSON you give it as your new profile, so **any field you leave out is removed**. Start from your current profile:
+Use `-set` to change individual fields; everything else in your profile is kept:
 
 ```bash
-hoot -p     # copy the JSON it prints, edit it, then:
-hoot -u '{"name":"Alice","about":"Terminal enthusiast","picture":"https://…","nip05":"alice@example.com","lud16":"alice@getalby.com"}'
+hoot -set about="Terminal enthusiast" -set lud16=alice@getalby.com
+hoot -set website=          # an empty value removes a field
+```
+
+Hoot prints what changed (`+` added, `~` changed, `-` removed) before publishing.
+
+`-u` instead publishes exactly the JSON you give it, so **any field you leave out is removed**:
+
+```bash
+hoot -u '{"name":"Alice","about":"Terminal enthusiast","lud16":"alice@getalby.com"}'
+```
+
+### Send a private message
+
+```bash
+hoot -dm npub1... -m "see you at the meetup"
 ```
 
 ### Tip someone

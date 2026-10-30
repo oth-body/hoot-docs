@@ -22,13 +22,18 @@ Press **Esc** on the QR screen to cancel. This closes the pairing session.
 
 | Feature | With Amber |
 |---|---|
-| Posting | ✅ Amber signs each post. Approve it on your phone if Amber asks. |
-| Feed, replies | ✅ |
+| Posting, replies, likes | ✅ Amber signs each one. Approve it on your phone if Amber asks. |
+| Feed, threads | ✅ |
+| DMs (read and send) | ✅ Amber encrypts and decrypts on your phone. Hoot only decrypts the newest messages, since each one is a round trip to the phone. |
+| Zaps | ✅ Amber signs the zap request; your wallet connection pays |
 | Tipping | ✅ Uses your wallet connection, not your Nostr key |
-| DMs | ❌ Not yet: reading DMs needs a key on this computer |
 | CLI commands (`hoot -m …`) | ❌ The CLI only uses keys stored on this computer |
 
-Amber sessions aren't saved: each time you run `hoot` you scan again.
+## Continue Without Scanning Next Time
+
+After you pair once, the login screen offers **📱 Continue as NAME (Amber)**. Choosing it reconnects to Amber without a QR code: Hoot checks that Amber still answers for the same account, and Amber may ask you to approve on your phone.
+
+The pairing is saved in `amber_session.json` in your [config directory](first-profile.md#where-hoot-stores-things). It lets this computer *ask* Amber to sign, and Amber's own approval settings still apply. To remove it, highlight **Continue as…** and press **`x`**, then **`y`**. To fully revoke access, also remove Hoot from the connected apps in Amber.
 
 ## Which Relays Are Used for Pairing
 
@@ -49,6 +54,10 @@ env -u HTTPS_PROXY -u HTTP_PROXY -u ALL_PROXY hoot
 - Check that Amber shows the connection as approved.
 - Make sure your phone has internet access.
 - Press **Esc** and try again; each attempt uses a fresh session.
+
+### "Couldn't reconnect: Amber didn't answer"
+
+Open Amber on your phone (it may be asleep or offline) and try **Continue as…** again. If it still fails, press `x` to forget the saved session and scan a new QR code.
 
 ### "Sign-in failed: …"
 
