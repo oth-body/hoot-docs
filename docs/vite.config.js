@@ -56,6 +56,15 @@ function urlFor(rel) {
 // /getting-started/installation/ must become "/posting-notes/".
 function rewriteLinks(html, rel) {
   const fromDir = posix.dirname(rel)
+  // Images are written relative to the .md file (so they also show on
+  // GitHub); the site serves them from the root.
+  html = html.replace(/<img src="(?![a-z]+:|\/)([^"]+)"/g, (whole, target) => {
+    const resolved = posix.normalize(posix.join(fromDir, target))
+    if (resolved.startsWith('..')) return whole
+    return `<img loading="lazy" decoding="async" src="/${resolved}"`
+  })
+  // Each screenshot links to the full-size file, for small screens.
+  html = html.replace(/<img [^>]*src="(\/assets\/[^"]+)"[^>]*>/g, (img, src) => `<a class="shot" href="${src}">${img}</a>`)
   return html.replace(/href="([^"#:?]+)\.md(#[^"]*)?"/g, (whole, target, hash = '') => {
     if (target.startsWith('//')) return whole
     const resolved = target.startsWith('/')

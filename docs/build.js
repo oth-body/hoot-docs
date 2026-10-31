@@ -1,4 +1,4 @@
-import { writeFile, mkdir, rm, cp } from 'fs/promises'
+import { writeFile, mkdir, rm, cp, access } from 'fs/promises'
 import { join } from 'path'
 import { fileURLToPath } from 'url'
 import { collectDocs, loadPages, renderPage } from './vite.config.js'
@@ -21,6 +21,9 @@ async function build() {
     // Fail the build on internal links to pages that don't exist.
     for (const [, href] of html.matchAll(/href="(\/[^"#?]*)/g)) {
       if (!urls.has(href) && !href.startsWith('/assets/')) broken.push(`${page.rel}.md -> ${href}`)
+    }
+    for (const [, src] of html.matchAll(/<img[^>]* src="\/([^"]+)"/g)) {
+      try { await access(join(__dirname, src)) } catch { broken.push(`${page.rel}.md -> /${src} (missing image)`) }
     }
     for (const [, href] of html.matchAll(/href="([^"#:?]+\.md)(?:#[^"]*)?"/g)) {
       broken.push(`${page.rel}.md -> ${href} (outside docs/)`)

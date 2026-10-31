@@ -166,6 +166,13 @@ main { padding: 3rem 3.5rem 4rem; min-width: 0; }
 }
 .prose blockquote > :last-child { margin-bottom: 0; }
 
+/* Screenshots */
+.prose img { display: block; max-width: 100%; height: auto; margin: 1.5rem 0 1.75rem; }
+.prose li img { margin: 1rem 0 1.25rem; }
+.prose a.shot { display: block; }
+.prose a.shot:focus-visible { outline-offset: 4px; }
+.prose img + em, .prose p > em:only-child { color: var(--muted); font-size: 0.9rem; }
+
 /* Tables */
 .prose table { width: 100%; border-collapse: collapse; margin: 1.25rem 0 1.5rem; font-size: 0.95rem; display: block; overflow-x: auto; }
 .prose th, .prose td { text-align: left; vertical-align: top; padding: 0.55rem 0.9rem 0.55rem 0; border-bottom: 1px solid var(--rule); }

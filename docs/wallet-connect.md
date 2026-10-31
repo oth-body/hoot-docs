@@ -42,6 +42,8 @@ Hoot checks the string before saving it (correct scheme, a hex wallet key and se
 3. Enter the amount in sats and press **Enter**.
 4. Hoot shows **Waiting for your wallet to pay...**, then the result, e.g. **⚡ Paid 21 sats to alice@getalby.com (fee 3000 msat)**.
 
+![The Tip Someone screen after a payment, showing "Paid 21 sats to mara@example.com (fee 1000 msat)"](assets/screenshots/tip-paid.webp)
+
 ### From the CLI
 
 ```bash
@@ -55,6 +57,8 @@ The CLI prints each step and, on success, the payment preimage (proof of payment
 ### Zap a Post
 
 In the feed or a thread, select a post and press **`z`**, then enter an amount. If the author's Lightning address supports Nostr zaps (NIP-57), Hoot attaches a signed zap request, so **the zap shows up on Nostr** against that post, like zaps from other apps. If it doesn't support zaps, the sats are sent as a plain tip and Hoot tells you so.
+
+![Zapping a post: the post's text at the top, "To: Theo Lin", and 100 sats entered as the amount](assets/screenshots/zap.webp)
 
 ## What Hoot Does
 
