@@ -23,7 +23,12 @@ Hoot imports existing keys; it doesn't generate new ones. If you don't have a No
 3. Enter a name for the profile (e.g. `main`). This is only a local label.
 4. Paste your `nsec1…` key.
 5. Choose a password. It encrypts the key on disk, and you'll type it each time you unlock this profile.
+
+   ![The password step: "Create a password to protect this profile", noting that it encrypts your key on this computer and can't be recovered](../assets/screenshots/new-profile-password.webp)
+
 6. You're signed in and on the home screen, which shows your full npub so you can copy and share it.
+
+   ![Hoot's home screen for the profile nightjar: the npub, then the menu Post a message, View feed, View DMs, View replies/reactions, Tip someone, Manage Relays, Switch Profile and Quit](../assets/screenshots/home.webp)
 
 > **There is no password recovery.** If you forget the password, delete the profile and add it again with your nsec.
 
@@ -32,6 +37,8 @@ Press **Esc** at any step to go back to the menu without saving.
 ## Signing In Later
 
 Run `hoot`, pick your profile from the list (the last one you used is marked ★), and enter its password.
+
+![The profile picker: the profile nightjar marked with a star, then Add new profile, Scan QR with Amber and Configure relays](../assets/screenshots/select-profile.webp)
 
 ## Multiple Profiles
 

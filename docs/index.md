@@ -7,6 +7,8 @@ nav_order: 1
 
 A terminal client for Nostr. Post notes, read the feed and your DMs, and tip people in sats without leaving the command line.
 
+![Hoot's feed in a terminal: posts from Mara Okafor, Theo Lin, June and kestrel in bordered boxes, with key hints for reply, like and zap underneath](assets/screenshots/feed.webp)
+
 Hoot has two modes:
 
 - **TUI**: run `hoot` with no arguments for a full-screen, menu-driven app.

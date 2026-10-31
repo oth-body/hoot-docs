@@ -13,8 +13,12 @@ nav_order: 4
 1. In Amber, make sure you have an account set up.
 2. Run `hoot` and choose **Scan QR with Amber** (📱).
 3. Hoot connects to its relays first, then shows a QR code. If the QR is cut off, make the terminal window bigger; it redraws as you resize.
+
+   ![Hoot's "Scan with Amber" screen: a large QR code and the line "Waiting for connection... scan this with your Amber app"](../assets/screenshots/amber-qr.webp)
+
+   *Example only: scan the QR code in your own terminal, not this one.*
 4. In Amber, scan the QR code and approve the connection.
-5. Hoot shows **Logged in as <your name>**. The home screen shows your name, your NIP-05 address (with ✓) and your bio, taken from your Nostr profile. If you have no profile yet, it shows your shortened npub instead.
+5. Hoot shows **Logged in as** followed by your name. The home screen shows your name, your NIP-05 address (with ✓) and your bio, taken from your Nostr profile. If you have no profile yet, it shows your shortened npub instead.
 
 Press **Esc** on the QR screen to cancel. This closes the pairing session.
 

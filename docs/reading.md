@@ -13,7 +13,13 @@ nav_order: 4
 - **↑/↓** (or **j/k**) selects a post. The selected post's `note1…` ID is shown under it, so you can copy it.
 - **Enter** opens the post's **thread**: its replies and reactions. Enter on a reply opens *that* thread; **Esc** goes back to the feed.
 
+![The global feed: four posts in bordered boxes, the first one selected with its note1 ID shown underneath, and "1 of 10 posts"](assets/screenshots/feed.webp)
+
 If none of your relays can be reached, the global feed shows the most recent posts Hoot cached locally.
+
+A thread shows the post at the top and its replies and reactions below:
+
+![A thread for the post "First post from the terminal": a reply from June, heart reactions from Theo Lin and kestrel, and a reply from Mara Okafor](assets/screenshots/thread.webp)
 
 ### Act on a Post
 
@@ -24,6 +30,8 @@ On the selected post (in the feed or a thread):
 | `r` | **Reply.** Write your reply and press Enter; Esc cancels. Replies are threaded properly (NIP-10), so other apps show them in the right place. |
 | `+` or `l` | **Like** (a NIP-25 reaction) |
 | `z` | **Zap**: enter an amount in sats. See [Tipping and Zaps](wallet-connect.md). |
+
+![Replying to a post: "Replying to Theo Lin" with the start of his note, and the reply being typed below](assets/screenshots/reply.webp)
 
 To see only your own notes from the CLI:
 
@@ -40,6 +48,8 @@ hoot -l    # your last 4 notes
 
 Received messages show as `[DM from]: …`; sent ones as `[DM to NAME]: …`.
 
+![The Direct Messages screen: a private sent message to Theo Lin and a private reply from him, both marked with a lock, and an older legacy message from June without one](assets/screenshots/dms.webp)
+
 **Sending:** on the DMs screen press **`n`** for a new message (enter an `npub1…` or hex public key, then your message), or **`r`** to reply to the selected conversation. Hoot always sends NIP-17 private messages, delivered to the recipient's DM inbox relays if they've published them (kind 10050).
 
 From the CLI:
@@ -54,6 +64,8 @@ DMs work with both an imported profile and [Amber](getting-started/amber-login.m
 ## Replies and Reactions by ID
 
 **[e] View replies/reactions** asks for a note's ID and lists its replies and reactions, newest first. You can enter a `note1…`, `nevent1…` (its relay hints are used too), `nostr:` link, or 64-character hex ID.
+
+![Replies and reactions looked up by note ID, with the ID prompt at the bottom of the screen](assets/screenshots/replies-by-id.webp)
 
 From the CLI:
 
