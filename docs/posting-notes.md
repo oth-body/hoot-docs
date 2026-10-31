@@ -14,13 +14,15 @@ Hoot publishes your note to every relay in your list. The post succeeds if at le
 3. Type your note and press **Enter**.
 4. You'll see **Posted successfully!** once a relay accepts it.
 
+![The New Post screen with "gm from the terminal ☕ #hoot" typed in and "Press Enter to post" below](assets/screenshots/new-post.webp)
+
 ## From the CLI
 
 ```bash
 hoot -m "Hello Nostr! #introduction"
 ```
 
-Hoot prints which relays accepted the note, then exits. With the CLI, `#hashtags` are also added as `t` tags so they show up in hashtag searches. Notes posted from the TUI don't get these tags yet.
+Hoot prints which relays accepted the note, then exits. `#hashtags` are added as `t` tags so they show up in hashtag searches; this works from the TUI too.
 
 Send a note to specific relays only (instead of your saved list):
 
@@ -48,6 +50,8 @@ Open **[r] Manage Relays** from the home screen, or **🔗 Configure relays** fr
 - **Esc**: go back
 
 Changes are saved immediately.
+
+![The Relay Settings screen listing wss://relay.example.com and wss://nos.example.org, with the keys a to add, d to delete and Esc to go back](assets/screenshots/relays.webp)
 
 ### The relays.txt File
 

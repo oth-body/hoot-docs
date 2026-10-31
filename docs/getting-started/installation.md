@@ -52,15 +52,7 @@ hoot -version
 
 Then run `hoot` with no arguments to launch the TUI. On first run you'll see:
 
-```
-🦉 Welcome to Hoot!
-
-No profiles yet. Let's create one!
-
-→ Create new profile
-  Scan QR with Amber (NIP-46)
-  🔗 Configure relays
-```
+![Hoot's welcome screen: "No profiles yet. Let's create one!" with the options Create new profile, Scan QR with Amber and Configure relays](../assets/screenshots/first-run.webp)
 
 Use **↑/↓** (or **j/k**) to move, **Enter** to choose, **Esc** to go back, and **Ctrl+C** to quit from anywhere. On the home screen, each item's letter is a shortcut: `p` post, `f` feed, `d` DMs, `e` replies, `t` tip, `r` relays, `s` switch profile, `q` quit.
 
