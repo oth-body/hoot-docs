@@ -43,7 +43,7 @@ No relay accepted the note.
 
 ### My post doesn't show up in other apps
 
-Other apps only see it if they read from at least one of the relays you posted to. Add a widely used relay (e.g. `wss://relay.damus.io` or `wss://nos.lol`) to your list.
+Other apps only see it if they read from at least one of the relays you posted to. Add a widely used relay (e.g. `wss://relay.damus.io`, `wss://nos.lol` or `wss://relay.primal.net`) to your list.
 
 ## Reading
 
