@@ -41,7 +41,7 @@ The pairing is saved in `amber_session.json` in your [config directory](first-pr
 
 ## Which Relays Are Used for Pairing
 
-The QR code lists your relays plus `wss://relay.damus.io` and `wss://nostr.wine`, so Amber can always reach Hoot even if your own relays are unusual. You can review your relays first with **🔗 Configure relays** on the login screen.
+The QR code lists your relays plus `wss://relay.damus.io` and `wss://nos.lol`, so Amber can always reach Hoot even if your own relays are unusual. You can review your relays first with **🔗 Configure relays** on the login screen.
 
 ## Troubleshooting
 

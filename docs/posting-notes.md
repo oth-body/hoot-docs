@@ -32,13 +32,15 @@ hoot -r "wss://relay1.example.com,wss://relay2.example.com" -m "Just these relay
 
 ## Relays
 
-If you haven't set up your own list, Hoot uses:
+If you haven't set up your own list, Hoot uses three free, general-purpose relays that accept posts from anyone:
 
 ```
 wss://relay.damus.io
-wss://relay.nostr.band
-wss://nostr.wine
+wss://nos.lol
+wss://relay.primal.net
 ```
+
+When you add your own, prefer free relays unless you've paid for one. **Paid relays** let anyone read but reject posts, replies, likes and DMs from people who aren't members, so a paid relay you haven't joined just shows up as a failure each time you post.
 
 ### Manage Relays in the TUI
 
