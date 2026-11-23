@@ -44,12 +44,15 @@ It asks for that key's password, or reads it from `HOOT_PASSWORD`. If there's no
 | `-npub` | Print your npub. TUI profiles don't need a password for this. |
 | `-s -k <nsec>` | Store a private key on this computer, encrypted with a password |
 
-### Tipping
+### Tipping and Zaps
 
 | Flag | Description |
 |------|-------------|
 | `-nwc "nostr+walletconnect://…"` | Save your wallet connection ([guide](wallet-connect.md)) |
-| `-tip <sats> -user <who>` | Tip someone. `<who>` is a Lightning address, `npub1…` or hex pubkey. |
+| `-tip <sats> -user <who>` | Tip someone (plain LNURL payment; no Nostr key needed). `<who>` is a Lightning address, `npub1…` or hex pubkey. |
+| `-zap <sats> -user <npub\|hex>` | Send a signed NIP-57 zap (requires your stored key). Falls back to a plain tip if the recipient's address doesn't support zaps. |
+| `-event <id>` | Optional event (`note1…`, `nevent1…`, `nostr:` or 64-char hex) to attach to `-zap` |
+| `-comment "text"` | Optional comment to attach to `-zap` |
 
 ### App Handlers (NIP-89)
 
@@ -104,11 +107,12 @@ hoot -u '{"name":"Alice","about":"Terminal enthusiast","lud16":"alice@getalby.co
 hoot -dm npub1... -m "see you at the meetup"
 ```
 
-### Tip someone
+### Tip or zap someone
 
 ```bash
 hoot -tip 21 -user alice@getalby.com
 hoot -tip 21 -user npub1...
+hoot -zap 21 -user npub1... -event note1... -comment "great post"
 ```
 
 ### Save a wallet connection

@@ -40,23 +40,28 @@ Hoot checks the string before saving it (correct scheme, a hex wallet key and se
 1. Choose **[t] Tip someone**.
 2. Enter who to tip: a Lightning address (`alice@getalby.com`), an `npub1…`, or a hex public key. Press **Enter**.
 3. Enter the amount in sats and press **Enter**.
-4. Hoot shows **Waiting for your wallet to pay...**, then the result, e.g. **⚡ Paid 21 sats to alice@getalby.com (fee 3000 msat)**.
+4. Hoot asks **`Pay N sats to …?`** — press **`y`** to confirm, or **`n`** / **Esc** to go back and change the amount.
+5. Hoot shows **Waiting for your wallet to pay...**, then the result, e.g. **⚡ Paid 21 sats to alice@getalby.com (fee 3000 msat)**.
 
 ![The Tip Someone screen after a payment, showing "Paid 21 sats to mara@example.com (fee 1000 msat)"](assets/screenshots/tip-paid.webp)
 
 ### From the CLI
 
 ```bash
-hoot -tip 21 -user alice@getalby.com     # Lightning address
-hoot -tip 21 -user npub1...              # npub
-hoot -tip 21 -user <hex-pubkey>          # hex public key
+hoot -tip 21 -user alice@getalby.com     # Lightning address (plain tip, no key needed)
+hoot -tip 21 -user npub1...              # npub (plain tip)
+hoot -tip 21 -user <hex-pubkey>          # hex public key (plain tip)
+
+# Signed NIP-57 zaps (appear on Nostr; uses your stored key):
+hoot -zap 21 -user npub1...
+hoot -zap 21 -user npub1... -event note1... -comment "great post"
 ```
 
-The CLI prints each step and, on success, the payment preimage (proof of payment).
+The CLI prints each step and, on success, the payment preimage (proof of payment). `-tip` does not need a Nostr key; `-zap` signs a NIP-57 zap request with your stored key (prompts for your password or reads `HOOT_PASSWORD`).
 
 ### Zap a Post
 
-In the feed or a thread, select a post and press **`z`**, then enter an amount. If the author's Lightning address supports Nostr zaps (NIP-57), Hoot attaches a signed zap request, so **the zap shows up on Nostr** against that post, like zaps from other apps. If it doesn't support zaps, the sats are sent as a plain tip and Hoot tells you so.
+In the feed or a thread, select a post and press **`z`**, enter an amount, and press **`y`** to confirm **`Zap N sats to …?`**. If the author's Lightning address supports Nostr zaps (NIP-57), Hoot attaches a signed zap request, so **the zap shows up on Nostr** against that post, like zaps from other apps. If it doesn't support zaps, the sats are sent as a plain tip and Hoot tells you so.
 
 ![Zapping a post: the post's text at the top, "To: Theo Lin", and 100 sats entered as the amount](assets/screenshots/zap.webp)
 
